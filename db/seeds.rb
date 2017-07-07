@@ -14,5 +14,7 @@ csv.each do |row|
 	appliance.save
 	chore = Chore.new
 	chore.name = row['name']
+	chore.appliance = appliance
 	chore.frequency = row['frequency']
+	chore.save
 end

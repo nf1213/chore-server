@@ -5,7 +5,14 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-coffeeMaker = Appliance.create(name: 'Coffee Maker')
-bathtub = Appliance.create(name: 'Bathtub')
-chore = Chore.create(appliance: bathtub, name: 'clean', frequency: 604800)
-chore = Chore.create(appliance: coffeeMaker, name: 'clean', frequency: 2629743)
+require 'csv'
+
+csv_text = File.read(Rails.root.join('lib', 'seeds', 'chores.csv'))
+csv = CSV.parse(csv_text, :headers => true, :encoding => 'ISO-8859-1')
+csv.each do |row|
+	appliance = Appliance.find_or_create_by(name: row['appliance'])
+	appliance.save
+	chore = Chore.new
+	chore.name = row['name']
+	chore.frequency = row['frequency']
+end
